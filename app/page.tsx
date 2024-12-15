@@ -32,7 +32,6 @@ function AddTask({ tasks, setTasks }: { tasks: Task[]; setTasks: React.Dispatch<
 
     return (
         <div>
-          <div>love</div>
           <table className='table table-bordered mb-5'>
           <thead>
             <tr className="p-20">
