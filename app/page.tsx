@@ -127,7 +127,7 @@ const App = () => {
 
   return (
     <div>
-      <h1 className="text-3xl md:text-5xl font-extrabold text-center text-primary p-5 pb-10">Dan's Task Manager</h1>
+      <h1 className="text-3xl md:text-5xl font-extrabold text-center text-primary p-5 pb-10">Dan&apos;s Task Manager</h1>
 
       {/* Filter buttons! */}
       <div>
