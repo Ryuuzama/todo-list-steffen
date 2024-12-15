@@ -23,23 +23,30 @@ export async function GET(
     }
   }
 
-export async function PUT(req: Request, context: { params: { id: string } }) {
-  try {
-    const { title, description, completed } = await req.json();
-    const updatedTask = await prisma.task.update({
-      where: { id: context.params.id },
-      data: { title, description, completed },
-    });
-    return NextResponse.json(updatedTask);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to update task" }, { status: 500 });
-  }
-}
-
-export async function DELETE(req: Request, context: { params: { id: string } }) {
+  export async function PUT(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
     try {
-      const { id } = context.params;
+      const { id } = await params; // Await the params promise
+      const { title, description, completed } = await req.json(); // Parse the request body
+      const updatedTask = await prisma.task.update({
+        where: { id },
+        data: { title, description, completed },
+      });
+      return NextResponse.json(updatedTask);
+    } catch (error) {
+      console.error(error);
+      return NextResponse.json({ error: "Failed to update task" }, { status: 500 });
+    }
+  }
+
+  export async function DELETE(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    try {
+      const { id } = await params; // Await the params promise
   
       if (!id) {
         return NextResponse.json({ error: "Task ID is required" }, { status: 400 });
@@ -54,4 +61,4 @@ export async function DELETE(req: Request, context: { params: { id: string } }) 
       console.error("Error deleting task:", error);
       return NextResponse.json({ error: "Failed to delete task" }, { status: 500 });
     }
-}
+  }
