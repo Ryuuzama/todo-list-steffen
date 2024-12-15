@@ -1,12 +1,9 @@
--- DropEnum
---DROP TYPE "crdb_internal_region";
-
 -- CreateTable
 CREATE TABLE "Task" (
-    "id" STRING NOT NULL,
-    "title" STRING NOT NULL,
-    "description" STRING,
-    "completed" BOOL NOT NULL DEFAULT false,
+    "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT,
+    "completed" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "deletedAt" TIMESTAMP(3),
