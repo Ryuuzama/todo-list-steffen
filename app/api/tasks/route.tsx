@@ -9,7 +9,10 @@ export async function GET() {
     return NextResponse.json(tasks);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to fetch tasks" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch tasks" },
+      { status: 500 }
+    );
   }
 }
 
@@ -22,6 +25,9 @@ export async function POST(req: Request) {
     return NextResponse.json(newTask, { status: 201 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Failed to create task" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to create task" },
+      { status: 500 }
+    );
   }
 }
