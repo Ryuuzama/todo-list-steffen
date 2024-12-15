@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { fetchTasks, addTask, updateTask, deleteTask } from "../lib/api/tasks";
 
-//task type
-
 interface Task {
   id: string;
   title: string;
