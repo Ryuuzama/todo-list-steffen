@@ -4,20 +4,24 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 // Handle fetching, updating, and deleting a single task by ID
-export async function GET(req: Request, context: { params: { id: string }}) {
-  try {
-    const task = await prisma.task.findUnique({
-      where: { id: context.params.id },
-    });
-    if (!task) {
-      return NextResponse.json({ error: "Task not found" }, { status: 404 });
+export async function GET(
+    req: Request,
+    { params }: { params: Promise<{ id: string }> }
+  ) {
+    try {
+      const { id } = await params;
+      const task = await prisma.task.findUnique({
+        where: { id },
+      });
+      if (!task) {
+        return NextResponse.json({ error: 'Task not found' }, { status: 404 });
+      }
+      return NextResponse.json(task);
+    } catch (error) {
+      console.error(error);
+      return NextResponse.json({ error: 'Failed to fetch task' }, { status: 500 });
     }
-    return NextResponse.json(task);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to fetch task" }, { status: 500 });
   }
-}
 
 export async function PUT(req: Request, context: { params: { id: string } }) {
   try {
