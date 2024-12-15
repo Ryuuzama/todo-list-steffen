@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react';
-import DeleteButton from './components/DeleteButton';
 
 interface Task {
     id: number;
