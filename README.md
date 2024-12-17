@@ -2,15 +2,30 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, download the newest version of Node.js here: https://nodejs.org/en
+
+Then run this code in your vscode terminal:
+
+```bash
+npx create-next-app@latest
+```
+
+That creates a new next.js project. You will be shown a ton of options. For this project I said yes to typescript, ESLint, Tailwind CSS, and the App Router. I said no to using a src directory, the Turbopack, and changing the import alias.
+
+run the development server:
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Sometimes the port will be 3001 instead of 3000, so just check the console if it give you a 404 error.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+Note:
+I also used something called DaisyUI to make using tailwind even simpler and give me more options to choose from, such as using themes. To see how you import it into a next.js project, see this website:
+
+https://daisyui.com/blog/install-daisyui-and-tailwindcss-in-nextjs/
 
 ## Deploy on Vercel
 
@@ -44,7 +59,7 @@ run this command to download prisma:
 npx prisma init
 ```
 
-this will create a prisma folder with a default "Schema" where you can design "models" that act as structures for tables in your future database. You can also specify what client you will use in the generator client block (in this case we are using primsa-client-js because we using javascript/typescript). Below that you'll see the datasource block where you specify what database you'll use (in this case "postgresql"), and other variables for connecting to the database, such as the database URL. Finally you can implement your "models" which is where you will define your tables structure (in this case "Task").
+This will create a prisma folder with a default "Schema" (the schema.prisma file) where you can design "models" that act as structures for tables in your future database. You can also specify what client you will use in the generator client block (in this case we are using primsa-client-js because we using javascript/typescript). Below that you'll see the datasource block where you specify what database you'll use (in this case "postgresql"), and other variables for connecting to the database, such as the database URL. Finally you can implement your "models" which is where you will define your tables structure (in this case "Task").
 
 In the package.json file, make sure to add in the "build" section of "scripts" the line "prisma generate" so it look like this:
 
@@ -69,7 +84,7 @@ To create a task, you can use this method:
     });
 ```
 
-this ".create()" method will take the data and actually make a task in the database. The primsa client has lots of functions like these. In the backend we use ".update()", ".findMany()", ".delete()", and ".findUnique()". However, ".delete()" isn't actually used since we will never actually delete a task, just mark it as deleted and not show it.
+this ".create()" method will take the data and actually make a task in the database. The primsa client has lots of functions like these. In the backend we use ".update()", ".findMany()", ".delete()", and ".findUnique()". However, ".delete()" isn't actually used since we will never actually delete a task - instead we just mark it as deleted and not show it.
 
 ### Setting up Supabase
 
@@ -94,4 +109,4 @@ this creates a unique migrations and applies it to our database and it generates
 Note:
 When you run your code, you'll see another file appear called prisma.tsx that is generated from the "generator client block" that I mentioned earlier. This just is there to keep prisma from making multiple instances, and makes a new one if one isn't currently running.
 
-and with that you should be ready to go!
+and with that you should be ready to go! You should now be able to go to the free domain that vercel provides and interact with the task app, performing all the CRUD functions and see it reflected perfectly in the database!

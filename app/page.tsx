@@ -49,11 +49,26 @@ const App = () => {
     try {
       //checking for whitespace
       if (title.trim() === "") return;
+      const tempId = crypto.randomUUID();
+      const currentDate = new Date().toISOString();
+      // just updating local state with the new task object
+      const localTask: Task = {
+        id: tempId,
+        title: userInputTaskName,
+        description: userInputTaskDescription,
+        completed: false,
+        createdAt: currentDate,
+        updatedAt: currentDate,
+        deletedAt: null,
+      };
+      setTasks((prevTasks) => [...prevTasks, localTask]); //doing this here the the UI respondes quicker and doesn't wait for the await. but we have to use a temporary task (or created a localtask copy along with a temporary id).
       //calls api to make a new task object
+
       const newTask = await addTask(title, description);
 
-      // just updating local state with the new task object
-      setTasks((prevTasks) => [...prevTasks, newTask]);
+      setTasks((prevTasks) =>
+        prevTasks.map((task) => (task.id === tempId ? newTask : task))
+      );
     } catch (error) {
       console.error("Error adding task:", error);
     }
