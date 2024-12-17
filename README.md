@@ -34,6 +34,64 @@ Once it has been updated on github, go back to vercel and find the giant box tha
 
 Once you click import, you can literally just click "deploy" and it will build your application for you and give you a free domain that is publically accessbile.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Connect Database using Prisma and Supabase
 
+### Setting up Prisma
 
+run this command to download prisma:
+
+```bash
+npx prisma init
+```
+
+this will create a prisma folder with a default "Schema" where you can design "models" that act as structures for tables in your future database. You can also specify what client you will use in the generator client block (in this case we are using primsa-client-js because we using javascript/typescript). Below that you'll see the datasource block where you specify what database you'll use (in this case "postgresql"), and other variables for connecting to the database, such as the database URL. Finally you can implement your "models" which is where you will define your tables structure (in this case "Task").
+
+In the package.json file, make sure to add in the "build" section of "scripts" the line "prisma generate" so it look like this:
+
+```bash
+"scripts": {
+    "dev": "npx prisma generate && next dev",
+    "build": "npx prisma generate && next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+```
+
+prisma will not be generated when you actually build it in deployment, so you have to code that in here so it calls it everytime it is built.
+
+This is how it works in the backend:
+
+To create a task, you can use this method:
+
+```bash
+    const newTask = await prisma.task.create({
+      data: { title, description },
+    });
+```
+
+this ".create()" method will take the data and actually make a task in the database. The primsa client has lots of functions like these. In the backend we use ".update()", ".findMany()", ".delete()", and ".findUnique()". However, ".delete()" isn't actually used since we will never actually delete a task, just mark it as deleted and not show it.
+
+### Setting up Supabase
+
+Head over to supabase.com and you can click "start project" and begin the setup process. You'll name your database and specify a region. But the most important part here is that you'll generate a password. This will be used for your connection string so prisma can connect to your database.
+
+Once you finish that setup you'll see a button at the top that says "Connect". Click it and it'll give you the options to connect. Since we are using Vercel, which uses IPv4, we have to go with a session pooler type of connection. Take the connection string given you there and go into your ".env" file and past it in quotes after the DATABASE_URL constant. It should look something like this:
+
+```bash
+DATABASE_URL="postgresql://postgres.cjeniewvmwgvifcmcafc:6<YOURPASSWORD>@aws-0-us-west-1.pooler.supabase.com:5432/postgres?pgbouncer=true"
+```
+
+### Connecting Prisma and Supabase
+
+Once you have your schema and database all set up, we have to run this command to migrate the table and data.
+
+```bash
+npx prisma migrate dev --name init
+```
+
+this creates a unique migrations and applies it to our database and it generates the prisma client.
+
+Note:
+When you run your code, you'll see another file appear called prisma.tsx that is generated from the "generator client block" that I mentioned earlier. This just is there to keep prisma from making multiple instances, and makes a new one if one isn't currently running.
+
+and with that you should be ready to go!

@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient(); //creates prisma client instance here
 
 // Handle fetching, updating, and deleting a single task by ID
-export async function GET(
+export async function GET( //this function is for fetching a single task, and isn't used right now.
   req: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> } //The params property is a Promise that resolves to an object containing { id: string }
 ) {
   try {
-    const { id } = await params;
+    const { id } = await params; //have to use await for the params because we are passing in a promise to see if they have the task with that id, and then the reponse is the id if they do have it.
     const task = await prisma.task.findUnique({
       where: { id },
     });
@@ -61,8 +61,9 @@ export async function DELETE(
       );
     }
 
-    const deletedTask = await prisma.task.delete({
+    const deletedTask = await prisma.task.update({ //using .update here as a way to do soft delete since in this case we don't want to actually delete the data, just hide it from the users.
       where: { id },
+      data: { deletedAt: new Date() }, 
     });
 
     return NextResponse.json({

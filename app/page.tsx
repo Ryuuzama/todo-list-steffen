@@ -61,9 +61,9 @@ const App = () => {
 
   //DELETE
   const handleDelete = async (id: string) => {
-    await deleteTask(id);
     const updatedTasks = tasks.filter((task) => task.id !== id);
     setTasks(updatedTasks);
+    await deleteTask(id);
   };
 
   //UPDATE constants-------------
@@ -82,12 +82,12 @@ const App = () => {
     updatedData: Partial<Task>
   ) => {
     //uses setTasks to actually make a new array of tasks as the current array, while also changing the title if editedTaskId is the same as one of the taskId's it is looping through with .map
-    await updateTask(taskId, updatedData);
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, title: editedUserInputTaskName } : task
       )
     ); //prevTasks is just a name to represent the old task array (react requires this array when doing setTasks). Then we loop through it with .map, and for each "task" we check if the id matches the taskId we passed in (which is the task we are editing. then we change the title to the new title.) "...task" is the new task we will update.
+    await updateTask(taskId, updatedData);
 
     setEditingNameId(null);
   };
@@ -108,7 +108,6 @@ const App = () => {
     updatedData: Partial<Task>
   ) => {
     //uses setTasks to actually make a new array of tasks as the current array, while also changing the title if editedTaskId is the same as one of the taskId's it is looping through with .map
-    await updateTask(taskId, updatedData);
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId
@@ -116,6 +115,7 @@ const App = () => {
           : task
       )
     ); //prevTasks is just a name to represent the old task array (react requires this array when doing setTasks). Then we loop through it with .map, and for each "task" we check if the id matches the taskId we passed in (which is the task we are editing. then we change the title to the new title.) "...task" is the new task we will update.
+    await updateTask(taskId, updatedData);
 
     setEditingDescriptionId(null);
   };
@@ -124,12 +124,15 @@ const App = () => {
     taskId: string,
     updatedData: Partial<Task>
   ) => {
-    await updateTask(taskId, updatedData);
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
+    setTasks(
+      (
+        prevTasks //putting setTasks first allows it to happen immediately for the user rather than waiting for the response to render
+      ) =>
+        prevTasks.map((task) =>
+          task.id === taskId ? { ...task, completed: !task.completed } : task
+        )
     );
+    await updateTask(taskId, updatedData);
   };
 
   //FILTER functions----------------

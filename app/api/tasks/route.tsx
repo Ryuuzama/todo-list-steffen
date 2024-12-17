@@ -5,7 +5,11 @@ const prisma = new PrismaClient();
 
 export async function GET() {
   try {
-    const tasks = await prisma.task.findMany(); // Fetch all tasks
+    const tasks = await prisma.task.findMany({
+      where: {
+        deletedAt: null, //this only gets the tasks that don't have a value in the deletedAt variable
+      }
+    }); // Fetch all tasks
     return NextResponse.json(tasks);
   } catch (error) {
     console.error(error);
@@ -17,6 +21,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  //the function name "POST" is actually required here
   try {
     const { title, description } = await req.json();
     const newTask = await prisma.task.create({
